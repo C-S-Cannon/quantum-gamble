@@ -1,9 +1,9 @@
 import matplotlib.pyplot as plt
 import numpy as np
-# from scipy.stats import norm
 
 # establish number of test cases
-N = 10000
+agN = 100000
+jN = agN
 
 alphaMu = 10.0
 alphaSigma = 3.0
@@ -13,7 +13,7 @@ gammaSigma = 20
 
 
 # create array of alpha test case values according to gaussian distribution
-alpha = np.random.normal(alphaMu, alphaSigma, N)
+alpha = np.random.normal(alphaMu, alphaSigma, agN)
 
 # graph distribution of alpha
 plt.subplot(2, 2, 1)
@@ -27,7 +27,7 @@ plt.yticks([])
 
 
 # create array of gamma test case values according to gaussian distribution
-gamma = np.random.normal(gammaMu, gammaSigma, N)
+gamma = np.random.normal(gammaMu, gammaSigma, agN)
 
 # graph distribution of gamma
 plt.subplot(2, 2, 3)
@@ -45,24 +45,39 @@ def testJones(alpha, gamma):
 
 
 # repeat jones matrix calculation on random selections from above matrixs
-jonesArr = np.empty(N*10)
-for i in range(N*10):
-    jonesArr[i] = testJones(alpha[np.random.randint(0, N)],
-                            gamma[np.random.randint(0, N)])
+jonesArr = np.empty(jN)
+for i in range(jN):
+    jonesArr[i] = testJones(alpha[np.random.randint(0, agN)],
+                            gamma[np.random.randint(0, agN)])
 
-# graph distribution of pseudo Jones
+# graph distribution of (pseudo) Jones using histogram buckets
 plt.subplot(4, 2, 2)
 xxCount, xxBins, xxIgnored = plt.hist(jonesArr, 30, density=True)
 plt.ylabel('xx')
 plt.title('Jones Matrix Values')
 plt.yticks([])
 
-# animate new data point at each step, graph multiplicity vertically
+plt.subplot(4, 2, 4)
+xyCount, xyBins, xyIgnored = plt.hist(jonesArr, 30, density=True)
+plt.ylabel('xy')
+plt.yticks([])
+plt.subplots_adjust(bottom=0.29)
+
+plt.subplot(4, 2, 6)
+yxCount, yxBins, yxIgnored = plt.hist(jonesArr, 30, density=True)
+plt.ylabel('yx')
+plt.yticks([])
+
+plt.subplot(4, 2, 8)
+yyCount, yyBins, yyIgnored = plt.hist(jonesArr, 30, density=True)
+plt.ylabel('yy')
+plt.yticks([])
+plt.tight_layout()
+
+# OR, animate new data point at each step, graph multiplicity vertically
 # graph point to given x value, check to see if there is a nearby x point
 # check if that point is at current y level, if yes, go up, then repeat
 # points should "bubble up" to form a gaussian distribution
-
-# alternatively, preset buckets and use a histogram to track if gaussian
 
 # also graph 2D with alpha/gamma and avg with error, the fuzzy blob graph
 
